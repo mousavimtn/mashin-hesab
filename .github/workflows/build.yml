@@ -44,6 +44,59 @@ jobs:
       run: |
         npx cap init "ماشین حساب سیدمحمد" "com.smohammad.calculator" --web-dir=www
         npx cap add android
+
+    - name: Generate Custom Calculator Icon
+      run: |
+        mkdir -p assets
+        # طراحی پس‌زمینه آیکون (سرمه‌ای)
+        cat << 'EOF' > assets/icon-background.svg
+        <svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+          <rect width="1024" height="1024" fill="#0d1b3e"/>
+        </svg>
+        EOF
+        # طراحی خود ماشین حساب (طلایی)
+        cat << 'EOF' > assets/icon-foreground.svg
+        <svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+          <rect x="100" y="100" width="824" height="824" rx="160" fill="none" stroke="#d4af37" stroke-width="24"/>
+          <rect x="180" y="180" width="664" height="200" rx="40" fill="#1a2a5e" stroke="#d4af37" stroke-width="12"/>
+          <text x="512" y="325" font-family="Arial, sans-serif" font-size="130" font-weight="bold" fill="#d4af37" text-anchor="middle">0</text>
+          <circle cx="260" cy="500" r="50" fill="#d4af37"/>
+          <circle cx="512" cy="500" r="50" fill="#d4af37"/>
+          <circle cx="764" cy="500" r="50" fill="#d4af37"/>
+          <circle cx="260" cy="660" r="50" fill="#d4af37"/>
+          <circle cx="512" cy="660" r="50" fill="#d4af37"/>
+          <circle cx="764" cy="660" r="50" fill="#d4af37"/>
+          <rect x="210" y="780" width="604" height="80" rx="40" fill="#d4af37"/>
+        </svg>
+        EOF
+        # طراحی صفحه لودینگ (Splash)
+        cat << 'EOF' > assets/splash.svg
+        <svg width="2732" height="2732" xmlns="http://www.w3.org/2000/svg">
+          <rect width="2732" height="2732" fill="#0d1b3e"/>
+          <g transform="translate(854, 854)">
+            <rect x="100" y="100" width="824" height="824" rx="160" fill="none" stroke="#d4af37" stroke-width="24"/>
+            <rect x="180" y="180" width="664" height="200" rx="40" fill="#1a2a5e" stroke="#d4af37" stroke-width="12"/>
+            <text x="512" y="325" font-family="Arial, sans-serif" font-size="130" font-weight="bold" fill="#d4af37" text-anchor="middle">0</text>
+            <circle cx="260" cy="500" r="50" fill="#d4af37"/>
+            <circle cx="512" cy="500" r="50" fill="#d4af37"/>
+            <circle cx="764" cy="500" r="50" fill="#d4af37"/>
+            <circle cx="260" cy="660" r="50" fill="#d4af37"/>
+            <circle cx="512" cy="660" r="50" fill="#d4af37"/>
+            <circle cx="764" cy="660" r="50" fill="#d4af37"/>
+            <rect x="210" y="780" width="604" height="80" rx="40" fill="#d4af37"/>
+          </g>
+        </svg>
+        EOF
+        # تبدیل SVG به PNG برای استفاده در اندروید
+        sudo apt-get update && sudo apt-get install -y librsvg2-bin
+        rsvg-convert -w 1024 -h 1024 assets/icon-background.svg -o assets/icon-background.png
+        rsvg-convert -w 1024 -h 1024 assets/icon-foreground.svg -o assets/icon-foreground.png
+        rsvg-convert -w 2732 -h 2732 assets/splash.svg -o assets/splash.png
+
+    - name: Apply Icons to Android Project
+      run: |
+        npm install @capacitor/assets
+        npx capacitor-assets generate --android
         npx cap sync android
 
     - name: Build APK with Gradle
