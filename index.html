@@ -2,163 +2,237 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ماشین حساب سیدمحمد موسوی متین</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ماشین حساب سیدمحمد</title>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif; }
+  :root {
+    --bg-dark: #070d19;
+    --bg-card: rgba(16, 28, 54, 0.7);
+    --gold-metallic: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    --gold-solid: #d4af37;
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --btn-dark: #131f37;
+    --btn-dark-hover: #1c2d4d;
+  }
+
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif; 
+    -webkit-tap-highlight-color: transparent;
+  }
 
   body {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 50% 0%, #1a2a5e 0%, #0d1b3e 60%, #060c22 100%);
+    background: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 50% 0%, #172a54 0%, transparent 60%),
+      radial-gradient(circle at 50% 100%, #111c33 0%, transparent 60%);
     padding: 20px;
-    gap: 18px;
+    overflow: hidden;
   }
 
-  .app-wrapper {
-    width: min(360px, 95vw);
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 25px 60px rgba(0,0,0,.6), 0 0 0 3px #d4af37;
+  /* بدنه ماشین حساب با افکت شیشه‌ای */
+  .calculator {
+    width: min(380px, 100%);
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 36px;
+    padding: 24px;
+    box-shadow: 
+      0 30px 60px rgba(0,0,0,0.8),
+      inset 0 1px 0 rgba(255,255,255,0.1),
+      0 0 0 1px rgba(212, 175, 55, 0.3);
+    position: relative;
+    z-index: 1;
   }
 
+  /* لوگو و عنوان */
   .header {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #d4af37;
-    margin-bottom: 16px;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
   }
 
-  .logo {
-    width: 88px;
-    height: 88px;
+  .logo-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f8f8;
-    border-radius: 50%;
-    padding: 8px;
-    border: 3px solid #d4af37;
-    box-shadow: 0 6px 18px rgba(212,175,55,.45);
+    padding: 6px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
 
-  .logo img { width: 100%; height: 100%; object-fit: contain; }
-
-  .title {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #0d1b3e;
-    text-align: center;
-    line-height: 1.6;
-    direction: rtl;
+  .logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  .title small {
-    display: block;
-    font-size: 0.72rem;
-    color: #d4af37;
-    font-weight: 700;
-    margin-top: 2px;
-    letter-spacing: 1px;
-    direction: ltr;
-  }
-
-  .display {
-    background: #0d1b3e;
-    color: #fff;
-    border-radius: 14px;
-    padding: 16px;
-    font-size: 2.2rem;
+  .title-box {
     text-align: right;
-    min-height: 84px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin-bottom: 14px;
-    overflow: hidden;
-    word-break: break-all;
-    direction: ltr;
-    border: 2px solid #d4af37;
-    font-variant-numeric: tabular-nums;
   }
 
+  .title-box h1 {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .title-box p {
+    font-size: 0.75rem;
+    color: var(--gold-solid);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  /* صفحه نمایش */
+  .display-container {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: inset 0 4px 15px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 120px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .history {
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-align: left;
+    min-height: 24px;
+    direction: ltr;
+    margin-bottom: 5px;
+    font-weight: 400;
+  }
+
+  .current {
+    font-size: 3.2rem;
+    color: var(--text-main);
+    text-align: left;
+    direction: ltr;
+    font-weight: 500;
+    line-height: 1.1;
+    word-break: break-all;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.1);
+  }
+
+  /* دکمه‌ها */
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 14px;
   }
 
   button {
     border: none;
-    border-radius: 12px;
-    padding: 16px 0;
-    font-size: 1.35rem;
-    background: #eef2f8;
-    color: #0d1b3e;
-    cursor: pointer;
-    transition: background .15s, transform .08s;
-    user-select: none;
-    font-weight: 600;
-  }
-
-  button:hover  { background: #dde5f0; }
-  button:active { transform: scale(.94); }
-
-  .operator       { background: #0d1b3e; color: #d4af37; }
-  .operator:hover { background: #1a2a5e; }
-
-  .clear       { background: #d4af37; color: #0d1b3e; }
-  .clear:hover { background: #e5c158; }
-
-  .equals {
-    background: #d4af37;
-    color: #0d1b3e;
-    font-weight: 700;
-    grid-row: span 2;
+    border-radius: 18px;
     font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 68px;
+    background: var(--btn-dark);
+    color: var(--text-main);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
   }
-  .equals:hover { background: #e5c158; }
 
-  .zero { grid-column: span 2; }
+  button:active {
+    transform: scale(0.92);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  }
 
-  .footer {
-    color: #d4af37;
-    font-size: 0.85rem;
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    direction: ltr;
+  /* دکمه‌های عملگر (رنگ سرمه‌ای با متن طلایی) */
+  .operator {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold-solid);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 1.8rem;
+  }
+  
+  .operator:active {
+    background: rgba(212, 175, 55, 0.2);
+  }
+
+  /* دکمه مساوی (طلایی متالیک) */
+  .equals {
+    background: var(--gold-metallic);
+    color: #0d1b3e;
+    grid-row: span 2;
+    height: 100%;
+    font-size: 2rem;
+    font-weight: 800;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+  }
+
+  .equals:active {
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.6);
+  }
+
+  /* دکمه‌های پاک کردن */
+  .clear, .backspace {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  .clear {
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  .zero {
+    grid-column: span 2;
   }
 </style>
 </head>
 <body>
 
-  <div class="app-wrapper">
+  <div class="calculator">
+    
     <div class="header">
-      <div class="logo">
-        <img src="logo.png"
-             alt="Real Madrid"
-             onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg';">
+      <div class="logo-container">
+        <img src="logo.png" alt="RM" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg';">
       </div>
-      <div class="title">
-        ماشین حساب سیدمحمد موسوی متین
-        <small>¡Hala Madrid!</small>
+      <div class="title-box">
+        <h1>سیدمحمد موسوی متین</h1>
+        <p>¡Hala Madrid!</p>
       </div>
     </div>
 
-    <div class="display" id="display">0</div>
+    <div class="display-container">
+      <div class="history" id="history"></div>
+      <div class="current" id="display">0</div>
+    </div>
 
     <div class="buttons" id="buttons">
       <button class="clear" data-action="clear">C</button>
-      <button data-action="backspace">⌫</button>
+      <button class="backspace" data-action="backspace">⌫</button>
       <button class="operator" data-op="/">÷</button>
       <button class="operator" data-op="*">×</button>
 
@@ -180,12 +254,12 @@
       <button data-num="0" class="zero">0</button>
       <button data-num=".">.</button>
     </div>
+
   </div>
 
-  <div class="footer">🤍 ¡Hala Madrid! 🤍</div>
-
 <script>
-  const display = document.getElementById('display');
+  const displayEl = document.getElementById('display');
+  const historyEl = document.getElementById('history');
   const buttons = document.getElementById('buttons');
 
   let current   = '0';
@@ -193,8 +267,24 @@
   let operator  = null;
   let resetNext = false;
 
+  const opSymbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+
   function updateDisplay() {
-    display.textContent = current;
+    // فرمت کردن عدد برای خوانایی بهتر (گذاشتن کاما)
+    let formatted = current;
+    if (current !== 'خطا' && !current.includes('e')) {
+        let parts = current.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        formatted = parts.join('.');
+    }
+    displayEl.textContent = formatted;
+
+    // آپدیت تاریخچه (بالای صفحه)
+    if (operator && previous !== null) {
+      historyEl.textContent = `${previous} ${opSymbols[operator]}`;
+    } else {
+      historyEl.textContent = '';
+    }
   }
 
   function inputNumber(num) {
@@ -214,6 +304,7 @@
     previous  = parseFloat(current);
     operator  = op;
     resetNext = true;
+    updateDisplay();
   }
 
   function compute() {
@@ -237,6 +328,7 @@
         break;
     }
 
+    // رفع مشکل دقت اعشار
     current   = String(Math.round(result * 1e10) / 1e10);
     previous  = null;
     operator  = null;
@@ -263,6 +355,9 @@
     const btn = e.target.closest('button');
     if (!btn) return;
 
+    // افکت لرزش خیلی ظریف برای لمس
+    if (navigator.vibrate) navigator.vibrate(10);
+
     if (btn.dataset.num !== undefined)          inputNumber(btn.dataset.num);
     else if (btn.dataset.op)                    setOperator(btn.dataset.op);
     else if (btn.dataset.action === 'equals')   compute();
@@ -270,6 +365,7 @@
     else if (btn.dataset.action === 'backspace') backspace();
   });
 
+  // پشتیبانی از کیبورد
   document.addEventListener('keydown', (e) => {
     const k = e.key;
     if (/^[0-9.]$/.test(k))                 inputNumber(k);
