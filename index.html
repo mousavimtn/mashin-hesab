@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماشین حساب سیدمحمد موسوی متین</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 0%, #1a2a5e 0%, #0d1b3e 60%, #060c22 100%);
+    padding: 20px;
+    gap: 18px;
+  }
+
+  .app-wrapper {
+    width: min(360px, 95vw);
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.6), 0 0 0 3px #d4af37;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #d4af37;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    width: 88px;
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f8f8;
+    border-radius: 50%;
+    padding: 8px;
+    border: 3px solid #d4af37;
+    box-shadow: 0 6px 18px rgba(212,175,55,.45);
+  }
+
+  .logo img { width: 100%; height: 100%; object-fit: contain; }
+
+  .title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0d1b3e;
+    text-align: center;
+    line-height: 1.6;
+    direction: rtl;
+  }
+
+  .title small {
+    display: block;
+    font-size: 0.72rem;
+    color: #d4af37;
+    font-weight: 700;
+    margin-top: 2px;
+    letter-spacing: 1px;
+    direction: ltr;
+  }
+
+  .display {
+    background: #0d1b3e;
+    color: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 2.2rem;
+    text-align: right;
+    min-height: 84px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+    overflow: hidden;
+    word-break: break-all;
+    direction: ltr;
+    border: 2px solid #d4af37;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  button {
+    border: none;
+    border-radius: 12px;
+    padding: 16px 0;
+    font-size: 1.35rem;
+    background: #eef2f8;
+    color: #0d1b3e;
+    cursor: pointer;
+    transition: background .15s, transform .08s;
+    user-select: none;
+    font-weight: 600;
+  }
+
+  button:hover  { background: #dde5f0; }
+  button:active { transform: scale(.94); }
+
+  .operator       { background: #0d1b3e; color: #d4af37; }
+  .operator:hover { background: #1a2a5e; }
+
+  .clear       { background: #d4af37; color: #0d1b3e; }
+  .clear:hover { background: #e5c158; }
+
+  .equals {
+    background: #d4af37;
+    color: #0d1b3e;
+    font-weight: 700;
+    grid-row: span 2;
+    font-size: 1.5rem;
+  }
+  .equals:hover { background: #e5c158; }
+
+  .zero { grid-column: span 2; }
+
+  .footer {
+    color: #d4af37;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    direction: ltr;
+  }
+</style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <div class="header">
+      <div class="logo">
+        <img src="logo.png"
+             alt="Real Madrid"
+             onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg';">
+      </div>
+      <div class="title">
+        ماشین حساب سیدمحمد موسوی متین
+        <small>¡Hala Madrid!</small>
+      </div>
+    </div>
+
+    <div class="display" id="display">0</div>
+
+    <div class="buttons" id="buttons">
+      <button class="clear" data-action="clear">C</button>
+      <button data-action="backspace">⌫</button>
+      <button class="operator" data-op="/">÷</button>
+      <button class="operator" data-op="*">×</button>
+
+      <button data-num="7">7</button>
+      <button data-num="8">8</button>
+      <button data-num="9">9</button>
+      <button class="operator" data-op="-">−</button>
+
+      <button data-num="4">4</button>
+      <button data-num="5">5</button>
+      <button data-num="6">6</button>
+      <button class="operator" data-op="+">+</button>
+
+      <button data-num="1">1</button>
+      <button data-num="2">2</button>
+      <button data-num="3">3</button>
+      <button class="equals" data-action="equals">=</button>
+
+      <button data-num="0" class="zero">0</button>
+      <button data-num=".">.</button>
+    </div>
+  </div>
+
+  <div class="footer">🤍 ¡Hala Madrid! 🤍</div>
+
+<script>
+  const display = document.getElementById('display');
+  const buttons = document.getElementById('buttons');
+
+  let current   = '0';
+  let previous  = null;
+  let operator  = null;
+  let resetNext = false;
+
+  function updateDisplay() {
+    display.textContent = current;
+  }
+
+  function inputNumber(num) {
+    if (resetNext) {
+      current = num;
+      resetNext = false;
+    } else if (num === '.') {
+      if (!current.includes('.')) current += '.';
+    } else {
+      current = current === '0' ? num : current + num;
+    }
+    updateDisplay();
+  }
+
+  function setOperator(op) {
+    if (operator !== null && !resetNext) compute();
+    previous  = parseFloat(current);
+    operator  = op;
+    resetNext = true;
+  }
+
+  function compute() {
+    if (operator === null || previous === null) return;
+
+    const curr = parseFloat(current);
+    let result;
+
+    switch (operator) {
+      case '+': result = previous + curr; break;
+      case '-': result = previous - curr; break;
+      case '*': result = previous * curr; break;
+      case '/':
+        if (curr === 0) {
+          current = 'خطا';
+          previous = null; operator = null; resetNext = true;
+          updateDisplay();
+          return;
+        }
+        result = previous / curr;
+        break;
+    }
+
+    current   = String(Math.round(result * 1e10) / 1e10);
+    previous  = null;
+    operator  = null;
+    resetNext = true;
+    updateDisplay();
+  }
+
+  function backspace() {
+    if (resetNext || current === 'خطا') return;
+    current = current.slice(0, -1);
+    if (current === '' || current === '-') current = '0';
+    updateDisplay();
+  }
+
+  function clearAll() {
+    current = '0';
+    previous = null;
+    operator = null;
+    resetNext = false;
+    updateDisplay();
+  }
+
+  buttons.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    if (btn.dataset.num !== undefined)          inputNumber(btn.dataset.num);
+    else if (btn.dataset.op)                    setOperator(btn.dataset.op);
+    else if (btn.dataset.action === 'equals')   compute();
+    else if (btn.dataset.action === 'clear')    clearAll();
+    else if (btn.dataset.action === 'backspace') backspace();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (/^[0-9.]$/.test(k))                 inputNumber(k);
+    else if (['+','-','*','/'].includes(k)) setOperator(k);
+    else if (k === 'Enter' || k === '=')    { e.preventDefault(); compute(); }
+    else if (k === 'Backspace')             backspace();
+    else if (k === 'Escape')                clearAll();
+  });
+</script>
+
+</body>
+</html>
