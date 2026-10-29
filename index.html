@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -9,21 +8,27 @@
 <style>
   :root {
     --bg-dark: #070d19;
-    --bg-card: rgba(16, 28, 54, 0.7);
+    --bg-card: #101c36;
     --gold-metallic: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
     --gold-solid: #d4af37;
     --text-main: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --btn-dark: #131f37;
-    --btn-dark-hover: #1c2d4d;
+    --text-muted: #8892b0;
+    --btn-dark: #1a2a4d;
+    --btn-active: #23376a;
   }
 
   * { 
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
-    font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif; 
+    font-family: 'Vazirmatn', Tahoma, sans-serif; 
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* جلوگیری از تاخیر ۳۰۰ میلی‌ثانیه‌ای لمس در موبایل */
+  body, button {
+    touch-action: manipulation;
   }
 
   body {
@@ -32,9 +37,7 @@
     align-items: center;
     justify-content: center;
     background: var(--bg-dark);
-    background-image: 
-      radial-gradient(circle at 50% 0%, #172a54 0%, transparent 60%),
-      radial-gradient(circle at 50% 100%, #111c33 0%, transparent 60%);
+    background-image: radial-gradient(circle at 50% 0%, #172a54 0%, #070d19 80%);
     padding: 20px;
     overflow: hidden;
   }
@@ -42,14 +45,9 @@
   .calculator {
     width: min(380px, 100%);
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-radius: 36px;
     padding: 24px;
-    box-shadow: 
-      0 30px 60px rgba(0,0,0,0.8),
-      inset 0 1px 0 rgba(255,255,255,0.1),
-      0 0 0 1px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 2px rgba(212, 175, 55, 0.2);
     position: relative;
     z-index: 1;
   }
@@ -71,7 +69,7 @@
     align-items: center;
     justify-content: center;
     padding: 6px;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
   }
 
   .logo-container img {
@@ -99,11 +97,10 @@
   }
 
   .display-container {
-    background: rgba(0, 0, 0, 0.4);
+    background: #0a1226;
     border-radius: 24px;
     padding: 20px;
     margin-bottom: 24px;
-    box-shadow: inset 0 4px 15px rgba(0,0,0,0.6);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -118,7 +115,6 @@
     min-height: 24px;
     direction: ltr;
     margin-bottom: 5px;
-    font-weight: 400;
   }
 
   .current {
@@ -130,13 +126,12 @@
     line-height: 1.1;
     word-break: break-all;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 2px 10px rgba(255,255,255,0.1);
   }
 
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: 12px;
   }
 
   button {
@@ -145,32 +140,30 @@
     font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     height: 68px;
     background: var(--btn-dark);
     color: var(--text-main);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
+    /* استفاده از ترنزیشن‌های سخت‌افزاری برای روانی */
+    transition: background 0.1s, transform 0.1s;
+    will-change: transform;
   }
 
+  /* حالت فشرده شدن با لمس (pointerdown) */
   button:active {
+    background: var(--btn-active) !important;
     transform: scale(0.92);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
   }
 
   .operator {
-    background: rgba(212, 175, 55, 0.1);
     color: var(--gold-solid);
-    border: 1px solid rgba(212, 175, 55, 0.3);
     font-size: 1.8rem;
   }
   
   .operator:active {
-    background: rgba(212, 175, 55, 0.2);
+    color: #fff;
   }
 
   .equals {
@@ -180,17 +173,15 @@
     height: 100%;
     font-size: 2rem;
     font-weight: 800;
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-    text-shadow: 0 1px 1px rgba(255,255,255,0.4);
   }
 
   .equals:active {
-    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.6);
+    transform: scale(0.95);
+    filter: brightness(1.2);
   }
 
   .clear, .backspace {
     color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.1);
   }
 
   .clear {
@@ -261,56 +252,42 @@
 
   const opSymbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
 
-  // --- سیستم صدا (Web Audio API) ---
+  // --- سیستم صدای فوق سریع (بدون ایجاد تاخیر) ---
   let audioCtx;
-  function playSound(type) {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+  const sounds = {};
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+  // پیش‌ساخت صداها برای اجرای فوری
+  function initAudio() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // ساخت صداهای کوتاه
+    const createBuffer = (freq, duration) => {
+      const sampleRate = audioCtx.sampleRate;
+      const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) {
+        data[i] = Math.sin(2 * Math.PI * freq * (i / sampleRate)) * Math.exp(-5 * (i / sampleRate));
+      }
+      return buffer;
+    };
 
-    const now = audioCtx.currentTime;
-
-    if (type === 'num') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now);
-      gain.gain.setValueAtTime(0.1, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-      osc.start(now);
-      osc.stop(now + 0.05);
-    } else if (type === 'op') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(500, now);
-      gain.gain.setValueAtTime(0.1, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-      osc.start(now);
-      osc.stop(now + 0.08);
-    } else if (type === 'eq') {
-      // صدای دوتایی برای دکمه مساوی
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, now);
-      osc.frequency.setValueAtTime(900, now + 0.05);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      osc.start(now);
-      osc.stop(now + 0.15);
-    } else if (type === 'clear') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(300, now);
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-      osc.start(now);
-      osc.stop(now + 0.08);
-    }
+    sounds.num = createBuffer(800, 0.05);
+    sounds.op  = createBuffer(500, 0.08);
+    sounds.eq  = createBuffer(1000, 0.1);
+    sounds.clr = createBuffer(300, 0.08);
   }
-  // ---------------------------------
+
+  function playSound(type) {
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const source = audioCtx.createBufferSource();
+    source.buffer = sounds[type];
+    source.connect(audioCtx.destination);
+    source.start();
+  }
+  // ------------------------------------------------
 
   function updateDisplay() {
     let formatted = current;
@@ -391,14 +368,14 @@
     updateDisplay();
   }
 
-  buttons.addEventListener('click', (e) => {
+  // استفاده از pointerdown به جای click برای واکنش فوری در لمس
+  buttons.addEventListener('pointerdown', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
 
-    // لرزش ظریف گوشی
-    if (navigator.vibrate) navigator.vibrate(10);
+    // فعالسازی صدا در اولین لمس (قانون مرورگرها)
+    if (!audioCtx) initAudio();
 
-    // پخش صدا بر اساس نوع دکمه
     if (btn.dataset.num !== undefined) {
         playSound('num');
         inputNumber(btn.dataset.num);
@@ -412,20 +389,20 @@
         compute();
     } 
     else if (btn.dataset.action === 'clear' || btn.dataset.action === 'backspace') {
-        playSound('clear');
+        playSound('clr');
         if (btn.dataset.action === 'clear') clearAll();
         else backspace();
     }
   });
 
-  // پشتیبانی از کیبورد (با صدا)
+  // پشتیبانی از کیبورد
   document.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (/^[0-9.]$/.test(k)) { playSound('num'); inputNumber(k); }
-    else if (['+','-','*','/'].includes(k)) { playSound('op'); setOperator(k); }
-    else if (k === 'Enter' || k === '=') { e.preventDefault(); playSound('eq'); compute(); }
-    else if (k === 'Backspace') { playSound('clear'); backspace(); }
-    else if (k === 'Escape') { playSound('clear'); clearAll(); }
+    if (/^[0-9.]$/.test(k)) { if (!audioCtx) initAudio(); playSound('num'); inputNumber(k); }
+    else if (['+','-','*','/'].includes(k)) { if (!audioCtx) initAudio(); playSound('op'); setOperator(k); }
+    else if (k === 'Enter' || k === '=') { e.preventDefault(); if (!audioCtx) initAudio(); playSound('eq'); compute(); }
+    else if (k === 'Backspace') { if (!audioCtx) initAudio(); playSound('clr'); backspace(); }
+    else if (k === 'Escape') { if (!audioCtx) initAudio(); playSound('clr'); clearAll(); }
   });
 </script>
 
