@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -38,7 +39,6 @@
     overflow: hidden;
   }
 
-  /* بدنه ماشین حساب با افکت شیشه‌ای */
   .calculator {
     width: min(380px, 100%);
     background: var(--bg-card);
@@ -54,7 +54,6 @@
     z-index: 1;
   }
 
-  /* لوگو و عنوان */
   .header {
     display: flex;
     align-items: center;
@@ -93,15 +92,12 @@
   }
 
   .title-box p {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--gold-solid);
     font-weight: 700;
-    letter-spacing: 1px;
     margin-top: 2px;
-    text-transform: uppercase;
   }
 
-  /* صفحه نمایش */
   .display-container {
     background: rgba(0, 0, 0, 0.4);
     border-radius: 24px;
@@ -137,7 +133,6 @@
     text-shadow: 0 2px 10px rgba(255,255,255,0.1);
   }
 
-  /* دکمه‌ها */
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -167,7 +162,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.4);
   }
 
-  /* دکمه‌های عملگر (رنگ سرمه‌ای با متن طلایی) */
   .operator {
     background: rgba(212, 175, 55, 0.1);
     color: var(--gold-solid);
@@ -179,7 +173,6 @@
     background: rgba(212, 175, 55, 0.2);
   }
 
-  /* دکمه مساوی (طلایی متالیک) */
   .equals {
     background: var(--gold-metallic);
     color: #0d1b3e;
@@ -195,7 +188,6 @@
     box-shadow: 0 2px 10px rgba(212, 175, 55, 0.6);
   }
 
-  /* دکمه‌های پاک کردن */
   .clear, .backspace {
     color: #ff6b6b;
     background: rgba(255, 107, 107, 0.1);
@@ -221,7 +213,7 @@
       </div>
       <div class="title-box">
         <h1>سیدمحمد موسوی متین</h1>
-        <p>¡Hala Madrid!</p>
+        <p>عشق یعنی رئال مادرید</p>
       </div>
     </div>
 
@@ -269,8 +261,58 @@
 
   const opSymbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
 
+  // --- سیستم صدا (Web Audio API) ---
+  let audioCtx;
+  function playSound(type) {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    const now = audioCtx.currentTime;
+
+    if (type === 'num') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } else if (type === 'op') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(500, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'eq') {
+      // صدای دوتایی برای دکمه مساوی
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.setValueAtTime(900, now + 0.05);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else if (type === 'clear') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(300, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }
+  }
+  // ---------------------------------
+
   function updateDisplay() {
-    // فرمت کردن عدد برای خوانایی بهتر (گذاشتن کاما)
     let formatted = current;
     if (current !== 'خطا' && !current.includes('e')) {
         let parts = current.split('.');
@@ -279,7 +321,6 @@
     }
     displayEl.textContent = formatted;
 
-    // آپدیت تاریخچه (بالای صفحه)
     if (operator && previous !== null) {
       historyEl.textContent = `${previous} ${opSymbols[operator]}`;
     } else {
@@ -328,7 +369,6 @@
         break;
     }
 
-    // رفع مشکل دقت اعشار
     current   = String(Math.round(result * 1e10) / 1e10);
     previous  = null;
     operator  = null;
@@ -355,24 +395,37 @@
     const btn = e.target.closest('button');
     if (!btn) return;
 
-    // افکت لرزش خیلی ظریف برای لمس
+    // لرزش ظریف گوشی
     if (navigator.vibrate) navigator.vibrate(10);
 
-    if (btn.dataset.num !== undefined)          inputNumber(btn.dataset.num);
-    else if (btn.dataset.op)                    setOperator(btn.dataset.op);
-    else if (btn.dataset.action === 'equals')   compute();
-    else if (btn.dataset.action === 'clear')    clearAll();
-    else if (btn.dataset.action === 'backspace') backspace();
+    // پخش صدا بر اساس نوع دکمه
+    if (btn.dataset.num !== undefined) {
+        playSound('num');
+        inputNumber(btn.dataset.num);
+    } 
+    else if (btn.dataset.op) {
+        playSound('op');
+        setOperator(btn.dataset.op);
+    } 
+    else if (btn.dataset.action === 'equals') {
+        playSound('eq');
+        compute();
+    } 
+    else if (btn.dataset.action === 'clear' || btn.dataset.action === 'backspace') {
+        playSound('clear');
+        if (btn.dataset.action === 'clear') clearAll();
+        else backspace();
+    }
   });
 
-  // پشتیبانی از کیبورد
+  // پشتیبانی از کیبورد (با صدا)
   document.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (/^[0-9.]$/.test(k))                 inputNumber(k);
-    else if (['+','-','*','/'].includes(k)) setOperator(k);
-    else if (k === 'Enter' || k === '=')    { e.preventDefault(); compute(); }
-    else if (k === 'Backspace')             backspace();
-    else if (k === 'Escape')                clearAll();
+    if (/^[0-9.]$/.test(k)) { playSound('num'); inputNumber(k); }
+    else if (['+','-','*','/'].includes(k)) { playSound('op'); setOperator(k); }
+    else if (k === 'Enter' || k === '=') { e.preventDefault(); playSound('eq'); compute(); }
+    else if (k === 'Backspace') { playSound('clear'); backspace(); }
+    else if (k === 'Escape') { playSound('clear'); clearAll(); }
   });
 </script>
 
