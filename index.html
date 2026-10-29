@@ -7,14 +7,14 @@
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <style>
   :root {
-    --bg-dark: #070d19;
-    --bg-card: #101c36;
-    --gold-metallic: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-    --gold-solid: #d4af37;
+    --bg-dark: #0b132b;
+    --bg-card: #121e3d;
+    --gold: #d4af37;
     --text-main: #ffffff;
     --text-muted: #8892b0;
-    --btn-dark: #1a2a4d;
-    --btn-active: #23376a;
+    --btn-dark: #1c2d54;
+    --btn-active: #2a4275;
+    --danger: #ff6b6b;
   }
 
   * { 
@@ -26,30 +26,24 @@
     user-select: none;
   }
 
-  /* جلوگیری از تاخیر ۳۰۰ میلی‌ثانیه‌ای لمس در موبایل */
-  body, button {
-    touch-action: manipulation;
-  }
-
   body {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg-dark);
-    background-image: radial-gradient(circle at 50% 0%, #172a54 0%, #070d19 80%);
     padding: 20px;
     overflow: hidden;
+    transform: translateZ(0);
   }
 
   .calculator {
     width: min(380px, 100%);
     background: var(--bg-card);
-    border-radius: 36px;
-    padding: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 2px rgba(212, 175, 55, 0.2);
-    position: relative;
-    z-index: 1;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    border: 2px solid var(--gold);
   }
 
   .header {
@@ -57,141 +51,100 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 
   .logo-container {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    padding: 5px;
   }
 
-  .logo-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+  .logo-container img { width: 100%; height: 100%; object-fit: contain; }
 
-  .title-box {
-    text-align: right;
-  }
-
-  .title-box h1 {
-    font-size: 1.05rem;
-    color: var(--text-main);
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
-
-  .title-box p {
-    font-size: 0.85rem;
-    color: var(--gold-solid);
-    font-weight: 700;
-    margin-top: 2px;
-  }
+  .title-box { text-align: right; }
+  .title-box h1 { font-size: 1rem; color: var(--text-main); font-weight: 800; }
+  .title-box p { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-top: 2px; }
 
   .display-container {
-    background: #0a1226;
-    border-radius: 24px;
-    padding: 20px;
-    margin-bottom: 24px;
+    background: #060c19;
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 120px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 110px;
+    border: 1px solid #223;
   }
 
   .history {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
     text-align: left;
-    min-height: 24px;
+    min-height: 22px;
     direction: ltr;
     margin-bottom: 5px;
   }
 
   .current {
-    font-size: 3.2rem;
+    font-size: 3rem;
     color: var(--text-main);
     text-align: left;
     direction: ltr;
     font-weight: 500;
     line-height: 1.1;
     word-break: break-all;
-    font-variant-numeric: tabular-nums;
   }
 
   .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 10px;
   }
 
   button {
     border: none;
-    border-radius: 18px;
+    border-radius: 15px;
     font-size: 1.5rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 68px;
+    height: 65px;
     background: var(--btn-dark);
     color: var(--text-main);
-    /* استفاده از ترنزیشن‌های سخت‌افزاری برای روانی */
     transition: background 0.1s, transform 0.1s;
     will-change: transform;
+    transform: translateZ(0);
   }
 
-  /* حالت فشرده شدن با لمس (pointerdown) */
   button:active {
-    background: var(--btn-active) !important;
-    transform: scale(0.92);
+    background: var(--btn-active);
+    transform: scale(0.92) translateZ(0);
   }
 
-  .operator {
-    color: var(--gold-solid);
-    font-size: 1.8rem;
-  }
-  
-  .operator:active {
-    color: #fff;
-  }
+  .operator { color: var(--gold); font-size: 1.8rem; }
+  .operator:active { color: #fff; }
 
   .equals {
-    background: var(--gold-metallic);
-    color: #0d1b3e;
+    background: var(--gold);
+    color: #0b132b;
     grid-row: span 2;
     height: 100%;
     font-size: 2rem;
     font-weight: 800;
   }
+  .equals:active { background: #e5c158; }
 
-  .equals:active {
-    transform: scale(0.95);
-    filter: brightness(1.2);
-  }
-
-  .clear, .backspace {
-    color: #ff6b6b;
-  }
-
-  .clear {
-    font-size: 1.2rem;
-    font-weight: 800;
-  }
-
-  .zero {
-    grid-column: span 2;
-  }
+  .clear, .backspace { color: var(--danger); font-weight: 800; }
+  .zero { grid-column: span 2; }
 </style>
 </head>
 <body>
@@ -252,42 +205,35 @@
 
   const opSymbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
 
-  // --- سیستم صدای فوق سریع (بدون ایجاد تاخیر) ---
-  let audioCtx;
-  const sounds = {};
+  let audioCtx = null;
 
-  // پیش‌ساخت صداها برای اجرای فوری
   function initAudio() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // ساخت صداهای کوتاه
-    const createBuffer = (freq, duration) => {
-      const sampleRate = audioCtx.sampleRate;
-      const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < buffer.length; i++) {
-        data[i] = Math.sin(2 * Math.PI * freq * (i / sampleRate)) * Math.exp(-5 * (i / sampleRate));
-      }
-      return buffer;
-    };
-
-    sounds.num = createBuffer(800, 0.05);
-    sounds.op  = createBuffer(500, 0.08);
-    sounds.eq  = createBuffer(1000, 0.1);
-    sounds.clr = createBuffer(300, 0.08);
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
   }
 
-  function playSound(type) {
+  function playBeep(freq) {
     if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
     
-    const source = audioCtx.createBufferSource();
-    source.buffer = sounds[type];
-    source.connect(audioCtx.destination);
-    source.start();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    
+    // صدای بسیار ملایم (از 0.1 به 0.02 کاهش یافت تا گوش خراش نباشد)
+    gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
   }
-  // ------------------------------------------------
 
   function updateDisplay() {
     let formatted = current;
@@ -354,9 +300,11 @@
   }
 
   function backspace() {
-    if (resetNext || current === 'خطا') return;
+    // حذف شرط resetNext برای اینکه دکمه حذف همیشه کار کند
+    if (current === 'خطا') return;
     current = current.slice(0, -1);
     if (current === '' || current === '-') current = '0';
+    resetNext = false; // اجازه می‌دهیم بعد از حذف، عدد جدید وارد شود
     updateDisplay();
   }
 
@@ -368,41 +316,42 @@
     updateDisplay();
   }
 
-  // استفاده از pointerdown به جای click برای واکنش فوری در لمس
+  // استفاده از pointerdown برای واکنش صفر میلی‌ثانیه‌ای
   buttons.addEventListener('pointerdown', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
+    
+    e.preventDefault(); 
 
-    // فعالسازی صدا در اولین لمس (قانون مرورگرها)
     if (!audioCtx) initAudio();
 
     if (btn.dataset.num !== undefined) {
-        playSound('num');
+        playBeep(800);
         inputNumber(btn.dataset.num);
     } 
     else if (btn.dataset.op) {
-        playSound('op');
+        playBeep(500);
         setOperator(btn.dataset.op);
     } 
     else if (btn.dataset.action === 'equals') {
-        playSound('eq');
+        playBeep(1000);
         compute();
     } 
     else if (btn.dataset.action === 'clear' || btn.dataset.action === 'backspace') {
-        playSound('clr');
+        playBeep(300);
         if (btn.dataset.action === 'clear') clearAll();
         else backspace();
     }
   });
 
-  // پشتیبانی از کیبورد
+  // کیبورد
   document.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (/^[0-9.]$/.test(k)) { if (!audioCtx) initAudio(); playSound('num'); inputNumber(k); }
-    else if (['+','-','*','/'].includes(k)) { if (!audioCtx) initAudio(); playSound('op'); setOperator(k); }
-    else if (k === 'Enter' || k === '=') { e.preventDefault(); if (!audioCtx) initAudio(); playSound('eq'); compute(); }
-    else if (k === 'Backspace') { if (!audioCtx) initAudio(); playSound('clr'); backspace(); }
-    else if (k === 'Escape') { if (!audioCtx) initAudio(); playSound('clr'); clearAll(); }
+    if (/^[0-9.]$/.test(k)) { if (!audioCtx) initAudio(); playBeep(800); inputNumber(k); }
+    else if (['+','-','*','/'].includes(k)) { if (!audioCtx) initAudio(); playBeep(500); setOperator(k); }
+    else if (k === 'Enter' || k === '=') { e.preventDefault(); if (!audioCtx) initAudio(); playBeep(1000); compute(); }
+    else if (k === 'Backspace') { if (!audioCtx) initAudio(); playBeep(300); backspace(); }
+    else if (k === 'Escape') { if (!audioCtx) initAudio(); playBeep(300); clearAll(); }
   });
 </script>
 
